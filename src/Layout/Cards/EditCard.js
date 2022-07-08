@@ -1,13 +1,15 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
-import { readDeck, readCard } from "../../utils/api/index";
+import { readDeck, readCard, updateCard } from "../../utils/api/index";
 import CardForm from "./CardForm";
 
 function EditCard() {
     const history= useHistory();
     const {deckId, cardId} = useParams();
+
     const [deck, setDeck] = useState({});
     const [cards, setCards] = useState([]);
+
     const [updatedFront, setUpdatedFront] = useState('');
     const [updatedBack, setUpdatedBack] = useState('');
     
@@ -34,22 +36,21 @@ function EditCard() {
     const handleCardUpdate = (event) => {
         event.preventDefault();
         const newCard = {id: cardId, front: updatedFront, back: updatedBack, deckId: deckId};
-        async function updateCard() {
+        async function update() {
             const updatedCard = await updateCard(newCard);
             setCards([...filteredCards, updatedCard]);
             history.push(`/decks/${deckId}`);
         }
-        updateCard();
+        update();
        }
+
 
        return (
         <Fragment>
             <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                    <Link to="/">
-                      Home
-                    </Link>
+                    <Link to="/">Home</Link>
                 </li>
                 <li className="breadcrumb-item">
                     {deck.name}
